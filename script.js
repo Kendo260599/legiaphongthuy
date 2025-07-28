@@ -4,8 +4,16 @@ const chi = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", 
 document.getElementById("birthForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const birthday = new Date(document.getElementById("birthday").value);
-  const hour = parseInt(document.getElementById("hour").value);
+  const birthdayInput = document.getElementById("birthday").value;
+  const hourInput = document.getElementById("hour").value;
+
+  if (!birthdayInput || hourInput === "") {
+    alert("Vui lòng nhập đầy đủ ngày sinh và giờ sinh.");
+    return;
+  }
+
+  const birthday = new Date(birthdayInput);
+  const hour = parseInt(hourInput);
   const gender = document.getElementById("gender").value;
   const year = birthday.getFullYear();
   const now = new Date().getFullYear();
@@ -17,6 +25,8 @@ document.getElementById("birthForm").addEventListener("submit", function (e) {
   const ketQuaKimLau = tinhKimLau(year, now);
   const ketQuaHoangOc = tinhHoangOc(year, now);
   const ketQuaTamTai = tinhTamTai(year, now);
+  const ketQuaNgayTot = danhGiaNgayTotXau(birthday, year);
+  const huongNha = goiYHuongNha(cung);
 
   const resultBox = document.getElementById("result");
   resultBox.innerHTML = `
@@ -29,6 +39,8 @@ document.getElementById("birthForm").addEventListener("submit", function (e) {
     <p><strong>Kim Lâu:</strong> ${ketQuaKimLau.loai}</p>
     <p><strong>Hoang Ốc:</strong> ${ketQuaHoangOc.ketQua}</p>
     <p><strong>Tam Tai:</strong> ${ketQuaTamTai.ketQua}</p>
+    <p><strong>Gợi ý hướng nhà hợp tuổi:</strong> ${huongNha}</p>
+    <p><strong>Đánh giá ngày hôm nay:</strong> ${ketQuaNgayTot}</p>
   `;
 });
 
@@ -60,8 +72,42 @@ function getCungPhi(year, gender) {
   return cungMap[cungSo];
 }
 
+// ---------- GỢI Ý HƯỚNG NHÀ ----------
+function goiYHuongNha(cung) {
+  const goiY = {
+    "Khảm": "Hợp hướng: Bắc, Đông, Nam, Đông Nam",
+    "Ly": "Hợp hướng: Bắc, Đông, Nam, Đông Nam",
+    "Chấn": "Hợp hướng: Bắc, Đông, Nam, Đông Nam",
+    "Tốn": "Hợp hướng: Bắc, Đông, Nam, Đông Nam",
+    "Càn": "Hợp hướng: Tây, Tây Bắc, Tây Nam, Đông Bắc",
+    "Khôn": "Hợp hướng: Tây, Tây Bắc, Tây Nam, Đông Bắc",
+    "Cấn": "Hợp hướng: Tây, Tây Bắc, Tây Nam, Đông Bắc",
+    "Đoài": "Hợp hướng: Tây, Tây Bắc, Tây Nam, Đông Bắc",
+  };
+  return goiY[cung.ten] || "Không xác định";
+}
+
+// ---------- NGÀY TỐT/XẤU ----------
+function danhGiaNgayTotXau(birthday, year) {
+  const chiNguoi = chi[(birthday.getFullYear() + 8) % 12];
+  const today = new Date();
+  const chiNgay = chi[(today.getDate() + 8) % 12];
+  const capXung = {
+    "Tý": "Ngọ", "Sửu": "Mùi", "Dần": "Thân", "Mão": "Dậu",
+    "Thìn": "Tuất", "Tỵ": "Hợi", "Ngọ": "Tý", "Mùi": "Sửu",
+    "Thân": "Dần", "Dậu": "Mão", "Tuất": "Thìn", "Hợi": "Tỵ"
+  };
+
+  if (capXung[chiNguoi] === chiNgay) {
+    return `❌ Hôm nay (${chiNgay}) xung với tuổi (${chiNguoi}) – Không nên thực hiện việc quan trọng.`;
+  } else {
+    return `✅ Hôm nay (${chiNgay}) không xung tuổi – Có thể xem là ngày tạm ổn.`;
+  }
+}
+
 // ---------- KIM LÂU ----------
-function tinhKimLau(namSinh, namXem) {const tuoiAm = namXem - namSinh + 1;
+function tinhKimLau(namSinh, namXem) {
+  const tuoiAm = namXem - namSinh + 1;
   const du = tuoiAm % 9;
   let loai = "Không phạm Kim Lâu";
   if (du === 1) loai = "Kim Lâu Thân – Hại bản thân";
