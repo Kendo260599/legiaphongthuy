@@ -1,8 +1,9 @@
 body {
-  font-family: serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f4e7ce;
   margin: 0;
   padding: 2rem;
+  color: #333;
 }
 
 .container {
@@ -17,6 +18,13 @@ body {
 h1 {
   text-align: center;
   color: #8b0000;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  color: #8b0000;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
 }
 
 label {
@@ -29,6 +37,9 @@ input, select {
   width: 100%;
   padding: 0.5rem;
   margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 button {
@@ -39,6 +50,13 @@ button {
   border: none;
   width: 100%;
   cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #a10000;
 }
 
 .result-box {
@@ -47,4 +65,5 @@ button {
   padding: 1rem;
   border-radius: 8px;
   border: 1px solid #ccc;
+  line-height: 1.6;
 }
